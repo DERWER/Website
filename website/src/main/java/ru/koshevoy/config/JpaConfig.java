@@ -22,10 +22,10 @@ import java.util.Properties;
 @EnableJpaRepositories(basePackages = "ru.koshevoy.repository")
 @PropertySource("classpath:application.properties")
 public class JpaConfig {
-    private static final String PROPERTY_NAME_DATABASE_DRIVER = "db.driver";
-    private static final String PROPERTY_NAME_DATABASE_PASSWORD = "db.password";
-    private static final String PROPERTY_NAME_DATABASE_URL = "db.url";
-    private static final String PROPERTY_NAME_DATABASE_USERNAME = "db.username";
+    private static final String PROPERTY_NAME_DATABASE_DRIVER = "jdbc.driverClassName";
+    private static final String PROPERTY_NAME_DATABASE_PASSWORD = "jdbc.password";
+    private static final String PROPERTY_NAME_DATABASE_URL = "jdbc.url";
+    private static final String PROPERTY_NAME_DATABASE_USERNAME = "jdbc.username";
 
     private static final String PROPERTY_NAME_HIBERNATE_DIALECT = "hibernate.dialect";
     private static final String PROPERTY_NAME_HIBERNATE_SHOW_SQL = "hibernate.show_sql";
@@ -37,10 +37,10 @@ public class JpaConfig {
     @Bean
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-        dataSource.setUrl("jdbc:mysql://localhost:3306/website");
-        dataSource.setUsername("username");
-        dataSource.setPassword("password");
+        dataSource.setDriverClassName(env.getRequiredProperty(PROPERTY_NAME_DATABASE_DRIVER));
+        dataSource.setUrl(env.getRequiredProperty(PROPERTY_NAME_DATABASE_URL));
+        dataSource.setUsername(env.getRequiredProperty(PROPERTY_NAME_DATABASE_USERNAME ));
+        dataSource.setPassword(env.getRequiredProperty(PROPERTY_NAME_DATABASE_PASSWORD));
 
         return dataSource;
     }
@@ -56,7 +56,7 @@ public class JpaConfig {
         LocalContainerEntityManagerFactoryBean entityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
         entityManagerFactoryBean.setDataSource(dataSource());
         entityManagerFactoryBean.setJpaVendorAdapter(vendorAdapter);
-        entityManagerFactoryBean.setPackagesToScan("ru.koshevoy.repository","ru.koshevoy.model");
+        entityManagerFactoryBean.setPackagesToScan(new String[] { PROPERTY_NAME_ENTITYMANAGER_PACKAGES_TO_SCAN });
         entityManagerFactoryBean.setJpaProperties(hibProperties());
 
         return entityManagerFactoryBean;
