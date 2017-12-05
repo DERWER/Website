@@ -32,14 +32,7 @@ public class ReviewServiceImpl implements ReviewService {
     private ReviewRepository reviewRepository;
 
     public List<Review> findAll() {
-        List reviews = new ArrayList();
-        Iterable reviesIterable=reviewRepository.findAll();
-        Iterator reviessIterator=reviesIterable.iterator();
-        while(reviessIterator.hasNext())
-        {
-            reviews.add(reviessIterator.next());
-        }
-        return reviews;
+        return reviewRepository.findAll();
     }
 
     public Review findById(Integer id) {
